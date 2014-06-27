@@ -1,0 +1,65 @@
+<pre>
+  BIP: 1337
+  Title: Protocol to Request Return of Lost Coins
+  Authors: reddit.com/u/btcrobinhood
+  Status: Initial Draft
+  Type: Standards Track
+  Created: 2014-06-28
+</pre>
+
+==Abstract==
+
+This BIP describes a standard signaling mechanism coordinating return of bitcoins that were transferred by accident or surreptitiously swept.
+
+
+==Motivation==
+
+;Use Case A
+: Bitcoin user ALICE, accidentally sends coins to an address of a user she does not know, BOB, and wishes her coins returned.
+;Use Case B
+: Bitcoin user ALICE, discovers one of her addresses has been surreptitiously swept  (perhaps because of an inherently weak or publicly compromised private key) to an address of someone unknown to her, BOB.  She wishes her coins returned.
+
+==Terminology==
+
+;Oops Transaction
+: (Case A) The accidental transaction ALICE sent to BOB.
+;Sweep Event
+: (Case B) The set of transactions that swept funds from ALICE's account.
+;Primary Address(es)
+: (Case A) ALICE's address(es) that sent the Oops Transaction.  (Case B) ALICE's address that was swept.
+;Upstream Addresses
+: All addresses that have sent coins to primary addresses prior to the (Case A) Oops transaction or (Case B) sweep event.
+;Downstream Addresses
+: All addresses that the primary address has sent coins to prior to the (Case A) Oops transaction or (Case B) sweep event.
+;Cosigning Addresses
+: All addresses that have signed other inputs in transactions in which a primary address has also signed an input (i.e. addresses that are directly tainted with the primary addresses).  Transactions that look like contracts (e.g. transactions with input signing flags other than SIGHALL_ALL) should be excluded in this analysis.
+;Authenticating Addresses
+: The superset containing the primary, upstream, downstream and cosigning addresses.
+;Tribute Output
+: Any transaction output with a value ending in 1337 Satoshis.  For example both 0.00021337 BTC and 0.00001337 BTC would constitute valid tribute amounts.  Tribute amounts higher than 0.00001337 BTC may be desirable depending on prevailing network rules regarding dust outputs.
+
+==Requirements and Assumptions==
+
+# Neither ALICE nor (especially) BOB need surrender their anonymity as part of the protocol.
+# The protocol should not require any channel of communication between ALICE and BOB other than the blockchain.
+# The protocol should not assume ALICE and BOB speak the same (human) language.
+# The protocol should be simple enough that it can be performed by ALICE using standard wallet software (i.e. things like custom OP_RETURN outputs are out of the question).  It is assumed BOB's side may in certain circumstances also require use of a [https://blockchain.info/ block explorer].
+# In (Case B) BOB should be assured to a reasonable degree of certainty the requester is genuine (and not simply some other scoundrel who has also deduced ALICE's primary address' private key).
+# We assume that the amount of the refund is obvious to both parties and need not be communicated.  (Case A) BOB should be able to identify the transaction he did not expect to receive.  (Case B) the amount swept will be abundantly obvious to BOB.
+
+==Protocol==
+
+ALICE should send a transaction with a tribute output to BOB's address from one or more authenticating addresses.  She can send these tributes either in one transaction (with multiple inputs) or as multiple transactions.  The tribute output can appear at any output index within the transaction.  If ALICE sends multiple tribute transactions, she should broadcast them all within a single 4-hour period.
+
+BOB should return ALICE's coins to the address associated with the 0-index input in the first tribute transaction he sees.
+
+It should be noted that not all authenticated address types constitute equally compelling evidence that the party requesting the refund is indeed ALICE and so different BOBs are free to enforce different standards for what constitutes sufficient evidence and for this reason ALICE should send as much evidence as possible.
+
+===Standard Evidence Threshold===
+
+(Case A) a tribute from a single primary address should be considered sufficient evidence.
+
+(Case B) is more complicated since other bad actors may know ALICE's primary address' private key.  It is still useful for ALICE to send a tribute to BOB from the primary address (although a tribute may be impossible to fund from this address if a bot instantly sweeps any amount sent it).  Tributes sent from a majority of upstream addresses (weighted by how much they previously funded the primary address) or from any cosigning address should be considered sufficient evidence.
+
+
+
