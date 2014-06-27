@@ -53,7 +53,7 @@ ALICE should send a transaction with a tribute output to BOB's address from one 
 
 BOB should return ALICE's coins to the address associated with the 0-index input in the first tribute transaction he sees.
 
-It should be noted that not all authenticated address types constitute equally compelling evidence that the party requesting the refund is indeed ALICE and so different BOBs are free to enforce different standards for what constitutes sufficient evidence and for this reason ALICE should send as much evidence as possible.
+It should be noted that not all authenticated address types constitute equally compelling evidence that the party requesting the refund is indeed ALICE and so different BOBs are free to enforce different standards for what constitutes sufficient evidence.  For this reason ALICE should send as much evidence as possible.
 
 ===Standard Evidence Threshold===
 
