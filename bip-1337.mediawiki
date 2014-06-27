@@ -61,5 +61,10 @@ It should be noted that not all authenticated address types constitute equally c
 
 (Case B) is more complicated since other bad actors may know ALICE's primary address' private key.  It is still useful for ALICE to send a tribute to BOB from the primary address (although a tribute may be impossible to fund from this address if a bot instantly sweeps any amount sent it).  Tributes sent from a majority of upstream addresses (weighted by how much they previously funded the primary address) or from any cosigning address should be considered sufficient evidence.
 
+===Proactive Signaling===
+BOB optionally may choose to proactively signal his willingness to return coins by: (Case A) bouncing a tribute output back to any primary address associated with the Oops Transaction; (Case B) leaving a tribute value left in the primary account when he executes his sweep.
+
+ALICE should not assume the absence of a proactive signal indicates unwillingness on the part of BOB to participate in this protocol.  BOB may (Case B) not wish to advertise to the entire network that particular transactions represent surreptitious sweeps and/or certain address are associated with weak keys or (Case A) may simply not yet have realized he received coins he did not expect.
+
 
 
